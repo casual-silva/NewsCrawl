@@ -1,0 +1,66 @@
+# -*- coding: utf-8 -*-
+import re
+import scrapy
+from ..items import GovpolicyspiderItem, GovpolicyItemLoader
+from ..rules import TitleRules, PublishDateRules, AttachmentDownloadRules, ContentRules, OfficeRules
+from ..rules.utils import urljoin
+
+
+class $classname(scrapy.Spider):
+    name = '$name'
+    allowed_domains = ['$domain']
+
+    title_rules = TitleRules()
+    publish_date_rules = PublishDateRules()
+    attachment_download_rules = AttachmentDownloadRules()
+    office_rules = OfficeRules()
+
+    start_urls = ['http://$domain/']
+
+    def parse(self, response):
+        # 详情页
+        for url in response.selector.re('href="(.*?)"'):
+            yield response.follow(url, callback=self.parse_detail)
+
+        # 翻页
+        total_pages = response.selector.re_first('<totalrecord>(\d+)</totalrecord>')
+        if total_pages:
+            for page in range(91, int(total_pages), 45):
+                startrecord = page - 45
+                endrecord = page - 1
+                url_postfix = re.sub('startrecord=\d+&endrecord=\d+', f'startrecord={startrecord}&endrecord={endrecord}', response.url)
+                yield response.follow(url_postfix, callback=self.parse)
+
+    def parse_detail(self, response):
+
+        l = GovpolicyItemLoader(item=GovpolicyspiderItem(), response=response)
+        # 通用提取规则
+        content_rules = ContentRules()  # 正文初始化 每次都需要初始化
+        l.add_value('title', self.title_rules.extract(response.text))  # 标题/title
+        l.add_value('publish_date', self.publish_date_rules.extractor(response.text))  # 发布日期/publish_date
+        l.add_value('attachment_download', self.attachment_download_rules.extract(response))  # 附件下载/attachment_download
+        l.add_value('text_content', content_rules.extract(response.text))  # 正文内容/text_content
+        l.add_value('detail_url', response.url)  # 详情网址/detail_url
+
+        # 个性定制化规则
+        header_loader = l.nested_css('.')
+        header_loader.add_css('index', "td:contains(索)::text")  # 索引号/index
+        header_loader.add_css('dispatch_office', "td:contains(发文机关)::text")  # 发文机关/dispatch_office
+        header_loader.add_css('dispatch_number', "td:contains('文      号:')::text")  # 发文字号/dispatch_number
+        header_loader.add_css('theme_category', "td:contains('主题分类')::text")  # 主题分类/theme_category
+        header_loader.add_css('writing_date', "td:contains('成文日期')::text")  # 成文日期/writing_date
+        header_loader.add_css('information_category', "td:contains('组配分类')::text")  # 信息类别/information_category
+
+        dispatch_office = self.office_rules.extract_offices(response)
+        l.add_value('dispatch_office', dispatch_office)  # 发文机关/dispatch_office
+
+        img_content = response.css("# img::attr(src)").getall()
+        l.add_value('img_content', (urljoin(response.url, url) for url in img_content))  # 图片正文内容/img_content
+
+
+        l.add_css('dispatch_number', 'p[style*=center] ::text', re=".*号")  # 发文字号/dispatch_number
+
+        l.add_css('article_source', '[name=ContentSource]::attr(content)')  # 来源/article_source
+        l.add_css('writing_date', 'p:nth-last-child(-n+5)', re="[0-9]{0,4}年[0-9]{1,2}月[0-9]{1,2}日") # 成文日期/writing_date
+
+        return l.load_item()

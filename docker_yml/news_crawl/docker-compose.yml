@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+    
+    
+    # 日志解析工具
+    crawl_scrapyd_logparser:
+         build: .
+         container_name: crawl_scrapyd_logparser
+         volumes:
+             - /home/spider_workplace/TLNewsCrawl:/home/spider_workplace/TLNewsCrawl
+         working_dir: /home/spider_workplace/TLNewsCrawl/TLNewsSpider/scrapyd_server
+         command: logparser -dir ./logs
+    
+    
+    # 基础爬虫调度服务
+    crawl_scrapyd:
+        build: .
+        container_name: crawl_scrapyd
+        expose: 
+            - "6800"
+        ports:
+            - "6800:6800"
+        volumes:
+            - /home/spider_workplace/TLNewsCrawl:/home/spider_workplace/TLNewsCrawl
+        working_dir: /home/spider_workplace/TLNewsCrawl/TLNewsSpider/scrapyd_server/
+        command: scrapyd --pidfile=
+        
+    
+     # 爬虫管理平台
+    crawl_scrapyd_web:
+        build: .
+        depends_on:
+            - crawl_scrapyd
+            - crawl_scrapyd_logparser
+        container_name: crawl_scrapyd_web
+        expose: 
+            - "5000"
+        ports:
+            - "5000:5000"
+        volumes:
+            - /home/spider_workplace/TLNewsCrawl:/home/spider_workplace/TLNewsCrawl
+
+        working_dir: /home/spider_workplace/TLNewsCrawl/TLNewsSpider/scrapyd_web_manager/
+        # 使用外部数据库需要的操作 (否则import导包失败)
+#        entrypoint: ["cp", "-f", "./vars.py", "/usr/local/lib/python3.7/site-packages/scrapydweb/vars.py"]
+#        entrypoint: ["cp", "-r", "./scrapydweb_settings_v10.py", "/usr/local/lib/python3.7/site-packages/scrapydweb/"]
+        command: /bin/bash -c "cp -f ./scrapydweb_settings_v10.py /usr/local/lib/python3.7/site-packages/scrapydweb/scrapydweb_settings_v10.py 
+            && cp -f ./vars.py /usr/local/lib/python3.7/site-packages/scrapydweb/vars.py
+            && scrapydweb"

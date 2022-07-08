@@ -1,0 +1,78 @@
+# -*- coding: utf-8 -*-
+import scrapy
+from ..scrapy_http import SeleniumRequest
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from ..items import GovpolicyspiderItem, GovpolicyItemLoader
+from ..rules import TitleRules, PublishDateRules, AttachmentDownloadRules, ContentRules, OfficeRules
+from ..rules.utils import urljoin
+
+
+class $classname(scrapy.Spider):
+    name = '$name'
+    allowed_domains = ['$domain']
+
+    custom_settings = {
+        "DOWNLOADER_MIDDLEWARES": {
+            "GovPolicySpider.middlewares.MozillaSeleniumMiddleware": 543
+        }
+    }
+
+    title_rules = TitleRules()
+    publish_date_rules = PublishDateRules()
+    attachment_download_rules = AttachmentDownloadRules()
+    office_rules = OfficeRules()
+
+    urls = ['http://$domain/']
+
+    def start_requests(self):
+        for url in self.urls:
+            yield SeleniumRequest(url=url, callback=self.parse, wait_time=10,
+                                  wait_until=EC.presence_of_element_located((By.CLASS_NAME, 'pages')))
+
+    def parse(self, response):
+        # 详情页
+        for url in response.css(".info-list li a::attr(href)").getall():
+             yield SeleniumRequest(url=response.urljoin(url), wait_time=10, callback=self.parse_detail)
+        # 翻页
+        count_pages = response.selector.re_first('createPageHTML\((\d+)')
+        if count_pages:
+            for page in range(1, int(count_pages)):
+                index = 'index_{}.shtml'.format(page)
+                yield SeleniumRequest(url=response.urljoin(index), wait_time=10, callback=self.parse,
+                                      wait_until=EC.presence_of_element_located((By.CLASS_NAME, 'row')))
+
+    def parse_detail(self, response):
+
+        l = GovpolicyItemLoader(item=GovpolicyspiderItem(), response=response)
+        # 通用提取规则
+        content_rules = ContentRules()  # 正文初始化 每次都需要初始化
+        l.add_value('title', self.title_rules.extract(response.text))  # 标题/title
+        l.add_value('publish_date', self.publish_date_rules.extractor(response.text))  # 发布日期/publish_date
+        l.add_value('attachment_download', self.attachment_download_rules.extract(response))  # 附件下载/attachment_download
+        l.add_value('text_content', content_rules.extract(response.text))  # 正文内容/text_content
+        l.add_value('detail_url', response.url)  # 详情网址/detail_url
+
+        # 个性定制化规则
+        header_loader = l.nested_css('.')
+        header_loader.add_css('index', "td:contains('[ 索引号 ]')+td::text")  # 索引号/index
+        header_loader.add_css('dispatch_office', "td:contains('[ 发布机构 ]')+td::text")  # 发文机关/dispatch_office
+        header_loader.add_css('dispatch_number', "td:contains('[ 发文字号 ]')+td::text")  # 发文字号/dispatch_number
+        header_loader.add_css('theme_category', "td:contains('[ 主题分类 ]')+td::text")  # 主题分类/theme_category
+        header_loader.add_css('writing_date', "td:contains('[ 成文日期 ]')+td::text")  # 成文日期/writing_date
+        header_loader.add_css('information_category', "td:contains('[ 体裁分类 ]')+td::text")  # 信息类别/information_category
+
+        img_content = response.css(".article img::attr(src)").getall()
+        if img_content:
+            l.add_value('img_content', (urljoin(response.url, url) for url in img_content))  # 图片正文内容/img_content
+
+        dispatch_office = self.office_rules.extract_offices(response)
+        l.add_value('dispatch_office', dispatch_office)  # 发文机关/dispatch_office
+
+        l.add_css('dispatch_number', 'p[style*=center] ::text', re=".*\d+号")  # 发文字号/dispatch_number
+        l.add_css('dispatch_number', 'p[align*=center] ::text', re=".*\d+号")  # 发文字号/dispatch_number
+
+        l.add_css('article_source', '[name=ContentSource]::attr(content)')  # 来源/article_source
+        l.add_css('writing_date', 'p:nth-last-child(-n+5)', re="[0-9]{0,4}年[0-9]{1,2}月[0-9]{1,2}日") # 成文日期/writing_date
+
+        return l.load_item()

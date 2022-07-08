@@ -1,0 +1,42 @@
+# 常用数据库部署安装
+version: '3.8'
+services:
+
+    mysql:
+        image: mysql:5.7.31
+        restart: always
+        container_name: mysql57
+        # 数据挂载
+        volumes:
+            - ./mysql57/log:/var/log/mysql
+            # 使用自定义配置文件 
+            - ./my.cnf:/etc/mysql/my.cnf
+            - ./mysql57/data:/var/lib/mysql
+            # 初次创建时会初始化该目录下的所有sql
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+        # 初始化数据库信息
+        environment:
+            - "MYSQL_ROOT_PASSWORD=Tlrobot123."
+            - "MYSQL_USER=tlrobot"
+            - "MYSQL_PASS=Tlrobot123."
+            - "MYSQL_DATABASE=news_crawl"
+            - "TZ=Asia/Shanghai"
+        command: [
+            '--character-set-server=utf8mb4',
+            '--collation-server=utf8mb4_general_ci',
+            '--max_connections=3000'
+        ]
+        ports:
+            - 3306:3306
+    
+    redis:
+        image: redis:6.0
+        container_name: redis
+        restart: always
+        ports:
+            - 6379:6379
+        volumes:
+            - ./redis/data:/data
+            - ./redis.conf:/etc/redis/redis.conf
+            - ./redis/log/redis.log:/logs/redis.log
+        command: redis-server /etc/redis/redis.conf

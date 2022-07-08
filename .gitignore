@@ -1,0 +1,8 @@
+dbs
+*/__pycache__
+/TLNewsSpider/scrapyd_server/eggs
+/TLNewsSpider/scrapyd_server/logs
+/TLNewsSpider/scrapyd_web_manager/data
+__pycache__
+/TLNewsSpider/project.egg-info
+/TLNewsSpider/build

@@ -3,6 +3,10 @@
 # 一、项目介绍
 
 可视化舆情信息获取平台: 基于GNE通用文本抽取模块提取文章所需信息, 目前包含大约300多个舆情站点
+![image](https://user-images.githubusercontent.com/37069873/177952594-0aabe51f-aaeb-44cf-a65d-f6b5cc391a71.png)
+![image](https://user-images.githubusercontent.com/37069873/177952680-8ef1dcd5-123e-4e37-adae-afe555233af1.png)
+![image](https://user-images.githubusercontent.com/37069873/177952747-775d4329-08e8-465d-9cb0-d099ddcdc43f.png)
+
 
 # 二、技术组成
 

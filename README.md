@@ -173,3 +173,4 @@ python auto_manage_spiders.py -n 2 -t 1
 python auto_manage_spiders.py -dp
 ```
 
+![image](https://user-images.githubusercontent.com/37069873/178644546-21589244-2ef6-4fa4-b12c-ce1139b4f7aa.png)

@@ -174,3 +174,5 @@ python auto_manage_spiders.py -dp
 ```
 
 ![image](https://user-images.githubusercontent.com/37069873/178644546-21589244-2ef6-4fa4-b12c-ce1139b4f7aa.png)
+
+ps: 此项目核心是整体大框架的部署应用和一些高级模块应用

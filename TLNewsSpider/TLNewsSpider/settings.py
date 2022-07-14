@@ -67,13 +67,13 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     # item 前处理 格式化
-    'TLNewsSpider.pipelines.NewsPreFixPipeline': 100,
+    # 'TLNewsSpider.pipelines.NewsPreFixPipeline': 100,
     # item 过滤清洗中间件
-    'TLNewsSpider.pipelines.NewsFilterPipeline': 200,
+    # 'TLNewsSpider.pipelines.NewsFilterPipeline': 200,
     # item mysql入库
-    'TLNewsSpider.pipelines.NewsSaveMysqlPipeline': 300,
+    # 'TLNewsSpider.pipelines.NewsSaveMysqlPipeline': 300,
     # item redis记录
-    'TLNewsSpider.pipelines.NewsSaveRedisPipeline': 400,
+    # 'TLNewsSpider.pipelines.NewsSaveRedisPipeline': 400,
 }
 
 

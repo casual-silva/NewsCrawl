@@ -16,9 +16,9 @@ services:
             - ./init.sql:/docker-entrypoint-initdb.d/init.sql
         # 初始化数据库信息
         environment:
-            - "MYSQL_ROOT_PASSWORD=Tlrobot123."
-            - "MYSQL_USER=tlrobot"
-            - "MYSQL_PASS=Tlrobot123."
+            - "MYSQL_ROOT_PASSWORD=xxx"
+            - "MYSQL_USER=root"
+            - "MYSQL_PASS=xxx"
             - "MYSQL_DATABASE=news_crawl"
             - "TZ=Asia/Shanghai"
         command: [

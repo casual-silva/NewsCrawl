@@ -13,7 +13,7 @@ DB_CONFIG = {
         "root": 'root',
         "host": '192.168.1.137',
         "db_name": 'news_crawl',
-        "pwd": 'Tlrobot123.'
+        "pwd": 'xxx'
     },
     'REDIS': {
         "host": "192.168.1.137",

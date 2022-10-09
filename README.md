@@ -180,5 +180,6 @@ ps: 此项目核心是整体大框架的部署应用和一些高级模块应用
 # 五、墙裂推荐
 - 如果本项目对你的工作、学习有帮助 请动动你们发财的小手指
 - 给作者后续更多开源的动力 **↓ ↓ ↓**
-![bedb0a99841ea6aea56d0b2450151fa](https://user-images.githubusercontent.com/37069873/194734592-03b23360-c3b9-430a-b919-af6b7bcf3d23.jpg)
+![image](https://user-images.githubusercontent.com/37069873/194734641-1a4c82ae-e6e0-4f23-acc5-a801d7efe44e.png)
+
 

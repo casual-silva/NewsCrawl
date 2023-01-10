@@ -1,8 +1,8 @@
-# TLNewsSpider-舆情信息获取
+# NewsSpider-舆情信息获取
 
 # 一、项目介绍
 
-TLNewsSpider 是一个舆情信息获取与可视化平台，基于 GNE（General News Extractor，通用新闻正文抽取）模块，抽取 400+ 个舆情站点的正文内容、标题、作者、发布时间、图片地址和正文所在的标签源代码等信息。项目主干技术覆盖python、scrapy、scrapyd、scrapydweb(开源管理平台)、mysql、redis，支持任意数量的爬虫一键运行、定时任务、批量删除、一键部署，并且可以实现爬虫监控可视化、配置集群爬虫分配策略、现成的docker一键部署等功能。 最近一次完全放开条件可抓500W+有效数据。
+NewsSpider 是一个舆情信息获取与可视化平台，基于 GNE（General News Extractor，通用新闻正文抽取）模块，抽取 400+ 个舆情站点的正文内容、标题、作者、发布时间、图片地址和正文所在的标签源代码等信息。项目主干技术覆盖python、scrapy、scrapyd、scrapydweb(开源管理平台)、mysql、redis，支持任意数量的爬虫一键运行、定时任务、批量删除、一键部署，并且可以实现爬虫监控可视化、配置集群爬虫分配策略、现成的docker一键部署等功能。 **最近一次完全放开条件可抓500W+有效数据**。
 
 
 ![image](https://user-images.githubusercontent.com/37069873/177952594-0aabe51f-aaeb-44cf-a65d-f6b5cc391a71.png)

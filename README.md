@@ -182,7 +182,8 @@ ps: 此项目核心是整体大框架的部署应用和一些高级模块应用
 # 五、墙裂推荐
 - 如果本项目对你的工作、学习有帮助 请动动你们发财的小手指
 - 给作者后续更多开源的动力 **↓ ↓ ↓**
-- 建了一个python技术交流小群 各位卷王大佬们加V进群 
+- 建了一个python技术交流小群 各位卷王大佬们加V进群
+   **-> 加的人多了 请备注经验年限和地域 感恩! 手动emoj**
 <table>
   <tr>
     <td><img width="384" alt="image" src="https://user-images.githubusercontent.com/37069873/194734641-1a4c82ae-e6e0-4f23-acc5-a801d7efe44e.png"></td>

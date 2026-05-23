@@ -38,6 +38,7 @@ class NewsSaveMysqlPipeline:
     管道数据过滤 采用redis hash值过滤
     '''
     def open_spider(self, spider):
+        init_database()
         self.session = DBSession()
 
     def process_item(self, item, spider):

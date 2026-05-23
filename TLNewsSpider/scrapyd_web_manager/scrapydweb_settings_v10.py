@@ -9,15 +9,25 @@ DOCS: https://github.com/my8100/files/blob/master/scrapydweb/README.md
 """
 import os
 
+PROJECT_ROOT = os.getenv(
+    'NEWSCRAWL_ROOT',
+    os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+)
+SCRAPYD_SERVER_LIST = [
+    item.strip()
+    for item in os.getenv('NEWSCRAWL_SCRAPYD_SERVERS', '127.0.0.1:6800').split(',')
+    if item.strip()
+]
+
 
 ############################## QUICK SETUP start ##############################
 ############################## 快速设置 开始 ###################################
 # Setting SCRAPYDWEB_BIND to '0.0.0.0' or IP-OF-THE-CURRENT-HOST would make
 # ScrapydWeb server visible externally; Otherwise, set it to '127.0.0.1'.
 # The default is '0.0.0.0'.
-SCRAPYDWEB_BIND = '0.0.0.0'
+SCRAPYDWEB_BIND = os.getenv('NEWSCRAWL_SCRAPYDWEB_BIND', '0.0.0.0')
 # Accept connections on the specified port, the default is 5000.
-SCRAPYDWEB_PORT = 5000
+SCRAPYDWEB_PORT = int(os.getenv('NEWSCRAWL_SCRAPYDWEB_PORT', '5000'))
 
 # The default is False, set it to True to enable basic auth for the web UI.
 ENABLE_AUTH = False
@@ -45,7 +55,7 @@ PASSWORD = 'tlrobot@123.'
 #   - or if ScrapydWeb fails to parse the string format passed in,
 #   - it's recommended to pass in a tuple of 5 elements.
 #   - e.g. ('', '', '127.0.0.1', '6800', '') or ('username', 'password', 'localhost', '6801', 'group')
-SCRAPYD_SERVERS = [
+SCRAPYD_SERVERS = SCRAPYD_SERVER_LIST or [
    '127.0.0.1:6800'
 #    '192.168.1.138:6800',
     # 'username:password@localhost:6801#group',
@@ -65,7 +75,7 @@ SCRAPYD_SERVERS = [
 # to the Scrapyd server.
 # e.g. '127.0.0.1:6800' or 'localhost:6801', do not forget the port number.
 # LOCAL_SCRAPYD_SERVER = '127.0.0.1:6800'
-LOCAL_SCRAPYD_SERVER = '127.0.0.1:6800'
+LOCAL_SCRAPYD_SERVER = os.getenv('NEWSCRAWL_LOCAL_SCRAPYD_SERVER', SCRAPYD_SERVERS[0])
 
 # Enter the directory when you run Scrapyd, run the command below
 # to find out where the Scrapy logs are stored:
@@ -73,7 +83,10 @@ LOCAL_SCRAPYD_SERVER = '127.0.0.1:6800'
 # Check out https://scrapyd.readthedocs.io/en/stable/config.html#logs-dir for more info.
 # e.g. 'C:/Users/username/logs' or '/home/username/logs'
 # LOCAL_SCRAPYD_LOGS_DIR = '/home/spider_workplace/TLNewsCrawl/TLNewsSpider/scrapyd_server/logs'
-LOCAL_SCRAPYD_LOGS_DIR = r'E:\workplace\TLNewsCrawl\TLNewsSpider\scrapyd_server\logs'
+LOCAL_SCRAPYD_LOGS_DIR = os.getenv(
+    'NEWSCRAWL_SCRAPYD_LOGS_DIR',
+    os.path.join(PROJECT_ROOT, 'TLNewsSpider', 'scrapyd_server', 'logs')
+)
 
 # The default is False, set it to True to automatically run LogParser as a subprocess at startup.
 # Note that you can run the LogParser service separately via command 'logparser' as you like.r
@@ -100,7 +113,7 @@ PRIVATEKEY_FILEPATH = ''
 # ScrapydWeb is able to locate projects in the SCRAPY_PROJECTS_DIR,
 # so that you can simply select a project to deploy, instead of packaging it in advance.
 # e.g. 'C:/Users/username/myprojects' or '/home/username/myprojects'
-SCRAPY_PROJECTS_DIR = r'E:\workplace\TLNewsCrawl'
+SCRAPY_PROJECTS_DIR = os.getenv('NEWSCRAWL_SCRAPY_PROJECTS_DIR', PROJECT_ROOT)
 # SCRAPY_PROJECTS_DIR = '/home/spider_workplace/TLNewsCrawl'
 
 
@@ -350,7 +363,10 @@ VERBOSE = False
 
 # The default is '', which means saving all program data in the Python directory.
 # e.g. 'C:/Users/username/scrapydweb_data' or '/home/username/scrapydweb_data'
-DATA_PATH = os.environ.get('DATA_PATH', '')
+DATA_PATH = os.getenv(
+    'NEWSCRAWL_SCRAPYDWEB_DATA_PATH',
+    os.getenv('DATA_PATH', os.path.join(PROJECT_ROOT, 'data', 'scrapydweb'))
+)
 
 # The default is '', which means saving data of Jobs and Timer Tasks in DATA_PATH using SQLite.
 # The data could be also saved in MySQL or PostgreSQL backend in order to improve concurrency.
@@ -361,5 +377,4 @@ DATA_PATH = os.environ.get('DATA_PATH', '')
 # 'postgres://username:password@127.0.0.1:5432'
 # 'sqlite:///C:/Users/username'
 # 'sqlite:////home/username'
-# DATABASE_URL = os.environ.get('DATABASE_URL', '')
-DATABASE_URL = "mysql://root:Tlrobot123.@192.168.1.137:3306"
+DATABASE_URL = os.getenv('NEWSCRAWL_SCRAPYDWEB_DATABASE_URL', os.getenv('DATABASE_URL', ''))

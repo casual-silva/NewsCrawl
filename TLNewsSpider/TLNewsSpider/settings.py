@@ -7,6 +7,7 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 import datetime
+import os
 import time
 
 BOT_NAME = 'TLNewsSpider'
@@ -55,26 +56,31 @@ SPIDER_MIDDLEWARES = {
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-    # redis去重中间件
-    'TLNewsSpider.middlewares.TlnewsspiderDownloaderMiddleware': 543
-    # 重试 | 代理中间件
-    # 'TLNewsSpider.middlewares.MyRetryMiddleware': 544,
-}
+NEWSCRAWL_REDIS_ENABLED = os.getenv('NEWSCRAWL_REDIS_ENABLED', '1').lower() not in ('0', 'false', 'no')
+NEWSCRAWL_STORAGE_ENABLED = os.getenv('NEWSCRAWL_STORAGE_ENABLED', '1').lower() not in ('0', 'false', 'no')
+
+DOWNLOADER_MIDDLEWARES = {}
+if NEWSCRAWL_REDIS_ENABLED:
+    DOWNLOADER_MIDDLEWARES['TLNewsSpider.middlewares.TlnewsspiderDownloaderMiddleware'] = 543
+
+# 重试 | 代理中间件
+# DOWNLOADER_MIDDLEWARES['TLNewsSpider.middlewares.MyRetryMiddleware'] = 544
 
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     # item 前处理 格式化
-    # 'TLNewsSpider.pipelines.NewsPreFixPipeline': 100,
+    'TLNewsSpider.pipelines.NewsPreFixPipeline': 100,
     # item 过滤清洗中间件
-    # 'TLNewsSpider.pipelines.NewsFilterPipeline': 200,
-    # item mysql入库
-    # 'TLNewsSpider.pipelines.NewsSaveMysqlPipeline': 300,
-    # item redis记录
-    # 'TLNewsSpider.pipelines.NewsSaveRedisPipeline': 400,
+    'TLNewsSpider.pipelines.NewsFilterPipeline': 200,
 }
+if NEWSCRAWL_STORAGE_ENABLED:
+    # item 入库，支持 MySQL 或 SQLite
+    ITEM_PIPELINES['TLNewsSpider.pipelines.NewsSaveMysqlPipeline'] = 300
+if NEWSCRAWL_REDIS_ENABLED:
+    # item redis记录
+    ITEM_PIPELINES['TLNewsSpider.pipelines.NewsSaveRedisPipeline'] = 400
 
 
 # Enable and configure HTTP caching (disabled by default)

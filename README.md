@@ -10,6 +10,26 @@ NewsSpider 是一个舆情信息获取与可视化平台，基于 GNE（General 
 ![image](https://user-images.githubusercontent.com/37069873/177952680-8ef1dcd5-123e-4e37-adae-afe555233af1.png)
 ![image](https://user-images.githubusercontent.com/37069873/177952747-775d4329-08e8-465d-9cb0-d099ddcdc43f.png)
 
+## 隆重介绍: 感谢赞助商大人对本项目的大力支持 - 用过的都说好
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://www.ipwo.net/?ref=githubxierwa" target="_blank">
+        <img src="data/IPWO.png" alt="IPWO 真实住宅 IP" width="760">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <strong>IPWO 真实住宅 IP - 面向爬虫采集场景的代理支持</strong><br>
+      <sub>IPWO 提供真实住宅 IP，适用于新闻采集、舆情监控、跨地区访问测试等需要稳定网络出口的任务，可帮助降低访问频率异常带来的封禁风险。</sub><br>
+      <sub>支持 195+ 国家 / 地区精准定位，适合大型爬虫任务、分布式节点调度和多地区数据验证。让爬虫更简单，让数据更安全。通过本项目链接注册，可获得用于保护账号的高匿名 IP 流量。</sub><br>
+      <a href="https://www.ipwo.net/?ref=githubxierwa">访问 IPWO 赞助商站点</a>
+    </td>
+  </tr>
+</table>
+
 
 # 二、技术组成
 
@@ -19,7 +39,7 @@ NewsSpider 是一个舆情信息获取与可视化平台，基于 GNE（General 
 
 - redis去重中间件
 - 请求重试中间件
-- 代理中间件
+- 代理中间件（赞助推荐：[IPWO 真实住宅 IP](https://www.ipwo.net/?ref=githubxierwa)，支持 195+ 国家 / 地区定位）
 - 爬虫详情信息定时推送至第三方小程序（微信公众号、飞书等-待开发）
 
 爬虫可配置数据管道：
@@ -37,6 +57,24 @@ NewsSpider 是一个舆情信息获取与可视化平台，基于 GNE（General 
 其他scrapy高级功能
 
 # 三、安装部署
+
+> 推荐先阅读详细部署文档：[docs/deployment.md](docs/deployment.md)
+>
+> 当前项目已提供根目录一键启动脚本：
+>
+> ```bash
+> # 本地快速启动：SQLite + scrapyd + scrapydweb
+> ./start.sh quick
+>
+> # 完整部署：Docker Compose + MySQL + Redis + scrapyd + scrapydweb
+> ./start.sh full
+>
+> # 查看状态 / 停止服务
+> ./start.sh status
+> ./start.sh stop
+> ```
+>
+> 如果本机没有 MySQL/Redis，优先使用 `./start.sh quick`，脚本会自动使用 SQLite 替代数据库服务。
 
 > 需上传项目至服务器固定目录： /home/spider_workplace/
 
@@ -116,6 +154,8 @@ docker-compose logs
 
 # 四、任务调度
 
+> 大规模调度多站点爬虫时，代理出口稳定性会直接影响任务成功率。需要住宅 IP、地区定位或高匿名代理流量时，可以参考赞助商 [IPWO](https://www.ipwo.net/?ref=githubxierwa)。
+
 ### 1. 使用介绍
 
 基于scrapydweb的公开接口， 批量管理爬虫任务的调度，免去前端页面的单个点击操作 Note： 1. 操作之前分好可用节点 和 host
@@ -180,6 +220,10 @@ python auto_manage_spiders.py -dp
 
 ps: 此项目核心是整体大框架的部署应用和一些高级模块应用
 
+# 赞助支持
+
+本项目赞助商 [IPWO](https://www.ipwo.net/?ref=githubxierwa) 提供真实住宅 IP、高匿名代理流量与 195+ 国家 / 地区定位能力，适合新闻采集、舆情监控、跨地区访问验证和大型爬虫调度场景。
+
 # 墙裂推荐
 - 如果本项目对你的工作、学习有帮助 请动动你们发财的小手指
 - 给作者后续更多开源的动力 **↓ ↓ ↓**
@@ -190,8 +234,5 @@ ps: 此项目核心是整体大框架的部署应用和一些高级模块应用
     <td><img width="384" alt="image" src="https://github.com/casual-silva/NewsCrawl/assets/37069873/d0f0385b-d2d7-4c7a-9459-b15aa882f79a"></td>
 </tr>
 </table>
-
-
-
 
 

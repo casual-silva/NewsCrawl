@@ -1,4 +1,23 @@
 version: '3.8'
+x-newscrawl-env: &newscrawl-env
+    NEWSCRAWL_DB_BACKEND: mysql
+    NEWSCRAWL_MYSQL_HOST: mysql
+    NEWSCRAWL_MYSQL_PORT: "3306"
+    NEWSCRAWL_MYSQL_DATABASE: news_crawl
+    NEWSCRAWL_MYSQL_USER: root
+    NEWSCRAWL_MYSQL_PASSWORD: ${NEWSCRAWL_MYSQL_PASSWORD:-Tlrobot123.}
+    NEWSCRAWL_REDIS_ENABLED: "1"
+    NEWSCRAWL_REDIS_HOST: redis
+    NEWSCRAWL_REDIS_PORT: "6379"
+    NEWSCRAWL_REDIS_DB: "2"
+    NEWSCRAWL_REDIS_PASSWORD: ${NEWSCRAWL_REDIS_PASSWORD:-}
+    NEWSCRAWL_ROOT: /home/spider_workplace/TLNewsCrawl
+    NEWSCRAWL_SCRAPYD_SERVERS: crawl_scrapyd:6800
+    NEWSCRAWL_LOCAL_SCRAPYD_SERVER: crawl_scrapyd:6800
+    NEWSCRAWL_SCRAPY_PROJECTS_DIR: /home/spider_workplace/TLNewsCrawl
+    NEWSCRAWL_SCRAPYD_LOGS_DIR: /home/spider_workplace/TLNewsCrawl/TLNewsSpider/scrapyd_server/logs
+    NEWSCRAWL_SCRAPYDWEB_DATA_PATH: /home/spider_workplace/TLNewsCrawl/data/scrapydweb
+    NEWSCRAWL_SCRAPYDWEB_DATABASE_URL: mysql://root:${NEWSCRAWL_MYSQL_PASSWORD:-Tlrobot123.}@mysql:3306
 services:
     
     
@@ -6,8 +25,9 @@ services:
     crawl_scrapyd_logparser:
          build: .
          container_name: crawl_scrapyd_logparser
+         environment: *newscrawl-env
          volumes:
-             - /home/spider_workplace/TLNewsCrawl:/home/spider_workplace/TLNewsCrawl
+             - ${NEWSCRAWL_ROOT:-/home/spider_workplace/TLNewsCrawl}:/home/spider_workplace/TLNewsCrawl
          working_dir: /home/spider_workplace/TLNewsCrawl/TLNewsSpider/scrapyd_server
          command: logparser -dir ./logs
     
@@ -16,12 +36,13 @@ services:
     crawl_scrapyd:
         build: .
         container_name: crawl_scrapyd
+        environment: *newscrawl-env
         expose: 
             - "6800"
         ports:
             - "6800:6800"
         volumes:
-            - /home/spider_workplace/TLNewsCrawl:/home/spider_workplace/TLNewsCrawl
+            - ${NEWSCRAWL_ROOT:-/home/spider_workplace/TLNewsCrawl}:/home/spider_workplace/TLNewsCrawl
         working_dir: /home/spider_workplace/TLNewsCrawl/TLNewsSpider/scrapyd_server/
         command: scrapyd --pidfile=
         
@@ -33,17 +54,19 @@ services:
             - crawl_scrapyd
             - crawl_scrapyd_logparser
         container_name: crawl_scrapyd_web
+        environment: *newscrawl-env
         expose: 
             - "5000"
         ports:
             - "5000:5000"
         volumes:
-            - /home/spider_workplace/TLNewsCrawl:/home/spider_workplace/TLNewsCrawl
+            - ${NEWSCRAWL_ROOT:-/home/spider_workplace/TLNewsCrawl}:/home/spider_workplace/TLNewsCrawl
 
         working_dir: /home/spider_workplace/TLNewsCrawl/TLNewsSpider/scrapyd_web_manager/
         # 使用外部数据库需要的操作 (否则import导包失败)
 #        entrypoint: ["cp", "-f", "./vars.py", "/usr/local/lib/python3.7/site-packages/scrapydweb/vars.py"]
 #        entrypoint: ["cp", "-r", "./scrapydweb_settings_v10.py", "/usr/local/lib/python3.7/site-packages/scrapydweb/"]
-        command: /bin/bash -c "cp -f ./scrapydweb_settings_v10.py /usr/local/lib/python3.7/site-packages/scrapydweb/scrapydweb_settings_v10.py 
+        command: /bin/bash -c "mkdir -p /home/spider_workplace/TLNewsCrawl/TLNewsSpider/scrapyd_server/logs
+            && cp -f ./scrapydweb_settings_v10.py /usr/local/lib/python3.7/site-packages/scrapydweb/scrapydweb_settings_v10.py 
             && cp -f ./vars.py /usr/local/lib/python3.7/site-packages/scrapydweb/vars.py
             && scrapydweb"

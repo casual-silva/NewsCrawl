@@ -1,4 +1,9 @@
 dbs
+.venv/
+data/*
+!data/IPWO.png
+logs/
+*.pid
 */__pycache__
 /TLNewsSpider/scrapyd_server/eggs
 /TLNewsSpider/scrapyd_server/logs

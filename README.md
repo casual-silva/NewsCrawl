@@ -12,23 +12,15 @@ NewsSpider 是一个舆情信息获取与可视化平台，基于 GNE（General 
 
 ## 隆重介绍: 感谢赞助商大人对本项目的大力支持 - 用过的都说好
 
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://www.ipwo.net/?ref=githubxierwa" target="_blank">
-        <img src="data/IPWO.png" alt="IPWO 真实住宅 IP" width="760">
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <strong>IPWO 真实住宅 IP - 面向爬虫采集场景的代理支持</strong><br>
-      <sub>IPWO 提供真实住宅 IP，适用于新闻采集、舆情监控、跨地区访问测试等需要稳定网络出口的任务，可帮助降低访问频率异常带来的封禁风险。</sub><br>
-      <sub>支持 195+ 国家 / 地区精准定位，适合大型爬虫任务、分布式节点调度和多地区数据验证。让爬虫更简单，让数据更安全。通过本项目链接注册，可获得用于保护账号的高匿名 IP 流量。</sub><br>
-      <a href="https://www.ipwo.net/?ref=githubxierwa">访问 IPWO 赞助商站点</a>
-    </td>
-  </tr>
-</table>
+<a href="https://www.ipwo.net/?ref=githubxierwa" target="_blank">
+  <img src="data/IPWO.png" alt="IPWO 真实住宅 IP" width="760">
+</a>
+<p>
+<strong>IPWO 真实住宅 IP - 面向爬虫采集场景的代理支持</strong><br>
+<sub>IPWO 提供真实住宅 IP，适用于新闻采集、舆情监控、跨地区访问测试等需要稳定网络出口的任务，可帮助降低访问频率异常带来的封禁风险。</sub><br>
+<sub>支持 195+ 国家 / 地区精准定位，适合大型爬虫任务、分布式节点调度和多地区数据验证。让爬虫更简单，让数据更安全。通过本项目链接注册，可获得用于保护账号的高匿名 IP 流量。</sub><br>
+<a href="https://www.ipwo.net/?ref=githubxierwa">访问 IPWO 赞助商站点</a>
+</p>
 
 
 # 二、技术组成
@@ -221,8 +213,10 @@ python auto_manage_spiders.py -dp
 ps: 此项目核心是整体大框架的部署应用和一些高级模块应用
 
 # 赞助支持
-
-本项目赞助商 [IPWO](https://www.ipwo.net/?ref=githubxierwa) 提供真实住宅 IP、高匿名代理流量与 195+ 国家 / 地区定位能力，适合新闻采集、舆情监控、跨地区访问验证和大型爬虫调度场景。
+<a href="https://www.ipwo.net/?ref=githubxierwa" target="_blank">
+        <img src="data/IPWO.png" alt="IPWO 真实住宅 IP" width="760">
+</a>
+本项目赞助商 [IPWO](https://www.ipwo.net/?ref=githubxierwa) 提供真实住宅 IP、高匿名代理流量与 195+ 国家 / 地区定位能力，适合新闻采集、舆情监控、跨地区访问验证和大型爬虫调度场景。亲测好用 童叟无欺!
 
 # 墙裂推荐
 - 如果本项目对你的工作、学习有帮助 请动动你们发财的小手指
